@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,6 +81,7 @@ public class UsuarioController {
                           content = @Content(mediaType = "application/json",
                                   array = @ArraySchema(schema = @Schema(implementation = UsuarioDtoRes.class))))
           })
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<List<UsuarioDtoRes>> getAll(){
     List<Usuario> users = usuarioService.buscarTodos();

@@ -12,6 +12,7 @@ public class JwtUserDetails extends User {
   //String username, String password, Collection<? extends GrantedAuthority> authorities vamos pegar do usuario
   public JwtUserDetails(Usuario usuario) {
     super(usuario.getUsername(), usuario.getPassword(), AuthorityUtils.createAuthorityList(usuario.getRole().name()));
+    this.usuario = usuario;
   }
 
   public Long getId(){
