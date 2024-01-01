@@ -20,7 +20,7 @@ public class JwtUtils {
   public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
   public static final long EXPIRE_DAYS = 0;
   public static final long EXPIRE_HOURS = 0;
-  public static final long EXPIRE_MINUTES = 2;
+  public static final long EXPIRE_MINUTES = 30;
 
   private JwtUtils(){
   }
@@ -35,7 +35,7 @@ public class JwtUtils {
     return Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
   }
 
-  public static JwtToken creteToken(String username, String role){
+  public static JwtToken createToken(String username, String role){
     Date issuedAt = new Date();
     Date limit = toExpireDate(issuedAt);
     String token = Jwts.builder()
@@ -53,9 +53,9 @@ public class JwtUtils {
     try {
       return Jwts.parserBuilder()
               .setSigningKey(generateKey()).build()
-              .parseClaimsJwt(refactorToken(token)).getBody();
+              .parseClaimsJws(refactorToken(token)).getBody();
     }catch (JwtException ex){
-      log.error(String.format("Token inválido %s"),ex.getMessage());
+      log.error(String.format("Token inválido %s",ex.getMessage()));
     }
     return null;
   }
@@ -68,16 +68,16 @@ public class JwtUtils {
     try {
       Jwts.parserBuilder()
               .setSigningKey(generateKey()).build()
-              .parseClaimsJwt(refactorToken(token));
+              .parseClaimsJws(refactorToken(token));
       return true;
     }catch (JwtException ex){
-      log.error(String.format("Token inválido %s"),ex.getMessage());
+      log.error(String.format("Token inválido %s",ex.getMessage()));
     }
     return false;
   }
-  private static String refactorToken (String token) {
-    if(token.contains(JWT_BEARER)){
-      return token.substring(JWT_BEARER.length());
+  private static String refactorToken(String token) {
+    if (token.contains(JWT_BEARER)) {
+      return token.substring(JWT_BEARER.length()).trim();
     }
     return token;
   }

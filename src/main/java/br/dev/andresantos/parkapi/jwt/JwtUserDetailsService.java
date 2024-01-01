@@ -20,7 +20,7 @@ public class JwtUserDetailsService implements UserDetailsService {
   }
   public JwtToken getTokenAuthenticated(String username){
     Usuario.Role role = usuarioService.buscarRolePorUsername(username);
-    return JwtUtils.creteToken(username, role.name().substring("Role_".length()));
+    return JwtUtils.createToken(username, role.name().substring("ROLE_".length()));
 
   }
 }

@@ -1,5 +1,6 @@
 package br.dev.andresantos.parkapi.config;
 
+import br.dev.andresantos.parkapi.jwt.JwaAuthenticationEntryPoint;
 import br.dev.andresantos.parkapi.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,11 +33,13 @@ public class SpringSecurityConfig {
                             antMatcher(HttpMethod.POST, "/api/v1/usuarios"),
                             antMatcher(HttpMethod.POST, "/api/v1/auth")
                     ).permitAll()
+                    .requestMatchers(DOCUMENTATION_API).permitAll()
                     .anyRequest().authenticated()
             ).sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             ).addFilterBefore(
                     jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
-            ).build();
+            ).exceptionHandling(ex -> ex.authenticationEntryPoint(new JwaAuthenticationEntryPoint()))
+            .build();
 
   }
 
@@ -54,4 +57,11 @@ public class SpringSecurityConfig {
     return  authenticationConfiguration.getAuthenticationManager();
   }
 
+  private static final String[] DOCUMENTATION_API = {
+    "/docs/index.html",
+    "/docs-park.html", "/docs-park/**",
+    "/v3/api-docs/**",
+    "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+    "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+  };
 }
