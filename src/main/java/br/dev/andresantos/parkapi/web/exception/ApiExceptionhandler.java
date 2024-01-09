@@ -1,6 +1,7 @@
 package br.dev.andresantos.parkapi.web.exception;
 
 import br.dev.andresantos.parkapi.exception.UsernameUniqueViolationException;
+import br.dev.andresantos.parkapi.service.exception.CpfUniqueViolationException;
 import br.dev.andresantos.parkapi.service.exception.EntityNotFoundException;
 import br.dev.andresantos.parkapi.service.exception.PasswordInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class ApiExceptionhandler {
                     "Campo(s) invalido(s)", result));
   }
 
-  @ExceptionHandler(UsernameUniqueViolationException.class)
+  @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
   public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException ex,
                                                                       HttpServletRequest request){
     log.error("Api Error - ",ex);
